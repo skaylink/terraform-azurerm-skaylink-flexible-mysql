@@ -15,3 +15,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # For questions and contributions please contact info@iq3cloud.com
+
+data "azurerm_resource_group" "rg" {
+  name = var.resource_group_name
+}
+
+data "azurerm_key_vault" "kv" {
+  name                = var.key_vault_name
+  resource_group_name = var.mgmt_resource_group
+}

@@ -15,3 +15,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # For questions and contributions please contact info@iq3cloud.com
+
+output "server_fqdn" {
+  value = azurerm_mysql_flexible_server.mysql.fqdn
+}
+
+
+output "server_id" {
+  value = azurerm_mysql_flexible_server.mysql.id
+}
+
+
+output "server_name" {
+  value = azurerm_mysql_flexible_server.mysql.name
+}

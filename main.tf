@@ -15,14 +15,49 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # For questions and contributions please contact info@iq3cloud.com
-resource "azurerm_resource_group" "resourcegroup" {
-  name     = var.name
-  location = var.location
-  tags = {
-    customTag1 = var.customTag1
-    customTag2 = var.customTag2
-    customTag3 = var.customTag3
-    customTag4 = var.customTag4
-    customTag5 = var.customTag5
+
+locals {
+  server_name = "${var.usecase}-${var.environment}-f-mysql"
+}
+
+resource "random_password" "password" {
+  length  = 24
+  special = true
+}
+
+resource "azurerm_key_vault_secret" {
+  name         = "${local.server_name}-password"
+  value        = random_password.password.result
+  key_vault_id = data.azurerm_key_vault.kv.id
+}
+
+resource "azurerm_mysql_flexible_server" "mysql" {
+  name                   = local.server_name
+  resource_group_name    = data.azurerm_resource_group.rg.name
+  location               = data.azurerm_resource_group.rg.name
+  version                = var.version
+  administrator_login    = "psqladmin"
+  administrator_password = random_password.password.result
+  zone                   = "1"
+  backup_retention_days  = var.backup_retention_days
+  sku_name               = var.sku
+
+  storage {
+    auto_grow_enabled = true
+    iops              = var.iops
+    size_gb           = var.size_gb
   }
+
+  high_availability {
+    mode = var.zone_redundant == true ? "ZoneRedundant" : "SameZone"
+  }
+}
+
+resource "azurerm_mysql_flexible_database" "databases" {
+  for_each            = toset(var.databases)
+  name                = each.value
+  resource_group_name = data.azurerm_resource_group.rg.name
+  server_name         = azurerm_mysql_flexible_server.mysql.name
+  charset             = "utf8"
+  collation           = "utf8_unicode_ci"
 }

@@ -1,19 +1,24 @@
-# Skaylink Terraform module template
+# Skaylink Terraform module; Flexible MySQL
 
-This template repository is used as the baseline for Skaylink Terraform modules, please use this as your starting point when building new (public) modules.
+This module will deploy a flexible MySQL instance on Azure, which is deemed to replace the older single-server offering in the long run.
 
-Currently this repository is set to be private, but any repos you want to deploy as a module need to be public.
+## Example
 
-## Process
+Below is an example of the module in use.
 
-To create a new module, simply create a new repository from this template, build on it, and deploy it to the Terraform registry.
-
-It is important to note that the template is a private repo, but the finished module has to be public. Do not remove the license file or the intro on the files. If you need to add more files, always add the license text first.
-
-## Checks
-
-We automatically run checks using GitHub workflows which ensures formatting, validation and vulnerebility checks are run.
-
-## Support
-
-If you need any support or guidance, don't hesitate to reach out to the Cloud Care team.
+```terraform
+  module "skaylink-flexible-mysql" {
+    resource_group_name   = "my-project-rg"
+    usecase               = "my-use-case-that-is-less-than-50-characters"
+    location              = "norwayeast"
+    environment           = "dev"
+    key_vault_name        = "my-kv-name"
+    mgmt_resource_group   = "my-kv-resource-group"
+    backup_retention_days = 35
+    size_gb               = "20"
+    sku                   = "MO_Standard_E2ds_v5"
+    zone_redundant        = true
+    databases             = ["my-awesome-db-1", "my-awesome-db-2", "my-awesome-db-3"]
+    administrator_login   = "iamgroot"
+  }
+```

@@ -16,38 +16,139 @@
 
 # For questions and contributions please contact info@iq3cloud.com
 
-variable "name" {
+variable "resource_group_name" {
   type        = string
-  description = "The name of the resource group you are deploying"
+  description = "The name of the resource group you are deploying to"
+
+  # Only allow values that have more than one character, but less than 63.
+  validation {
+    condition     = length(var.resource_group_name) > 1 && length(var.resource_group_name) <= 63
+    error_message = "Resource group names can have a max of 63 characters"
+  }
+  validation {
+    condition     = can(regex("[A-Za-z0-9-_]+", var.resource_group_name))
+    error_message = "Invalid value, valid characters are A-Z, a-z, 0-9, hyphens and underscores"
+  }
+}
+
+variable "usecase" {
+  type        = string
+  description = "The use case of the resource"
+
+  validation {
+    condition     = length(var.usecase) > 1 && length(var.usecase) <= 50
+    error_message = "use case name cannot exceed 50 characters"
+  }
+
+  validation {
+    condition     = can(regex("[A-Za-z0-9-]+", var.usecase))
+    error_message = "Invalid value, valid characters are A-Z, a-z, 0-9 and hyphens"
+  }
 }
 
 variable "location" {
   type        = string
-  description = "The location of the resource group, defaults to west Europe"
+  description = "The location of the resources, defaults to west Europe"
   default     = "westeurope"
 }
 
-variable "customTag1" {
+variable "environment" {
   type        = string
-  description = "the first customTag"
+  description = "The environment we will deploy resources in, for example: dev, test, qa, prd"
+
+  # Only allow values that have more than one character, but less than three.
+  validation {
+    condition     = length(var.environment) > 1 && length(var.environment) <= 5
+    error_message = "Value can't exceed 5 characters"
+  }
+
+  # Only allow alphanumeric characters, 1-9 and underscores.
+  validation {
+    condition     = can(regex("[A-Za-z0-9]+", var.environment))
+    error_message = "Invalid value, valid characters are A-Z, a-z and 0-9"
+  }
 }
 
-variable "customTag2" {
+variable "key_vault_name" {
   type        = string
-  description = "the second customTag"
+  description = "Key vault to store secrets in, must be located in `mgmt_resource_group`"
+
+  validation {
+    condition     = length(var.key_vault_name) > 1 && length(var.key_vault_name) <= 24
+    error_message = "Key vault names can have a max of 24 characters"
+  }
+  validation {
+    condition     = can(regex("[A-Za-z0-9-]+", var.key_vault_name))
+    error_message = "Invalid value, valid characters are A-Z, a-z, 0-9 and hyphens"
+  }
+
 }
 
-variable "customTag3" {
+variable "mgmt_resource_group" {
   type        = string
-  description = "the third customTag"
+  description = "The resource group where you store management resources"
+  default     = "iq3-basemanagement"
+
+  validation {
+    condition     = length(var.mgmt_resource_group) > 1 && length(var.mgmt_resource_group) <= 63
+    error_message = "Resource group names can have a max of 63 characters"
+  }
+  validation {
+    condition     = can(regex("[A-Za-z0-9-_]+", var.mgmt_resource_group))
+    error_message = "Invalid value, valid characters are A-Z, a-z, 0-9, hyphens and underscores"
+  }
 }
 
-variable "customTag4" {
-  type        = string
-  description = "the fourth customTag"
+variable "backup_retention_days" {
+  type        = number
+  description = "Backup retention days"
+  default     = 7
+
+  validation {
+    condition     = var.backup_retention_days >= 7 && var.backup_retention_days <= 35 && floor(var.backup_retention_days) == var.backup_retention_days
+    error_message = "Accepted values: 7-35."
+  }
 }
 
-variable "customTag5" {
+variable "iops" {
   type        = string
-  description = "the fifth customTag"
+  description = "IOPS"
+  default     = "1000"
+}
+
+variable "size_gb" {
+  type        = string
+  description = "The disk size of your databases server"
+  default     = "32"
+}
+
+variable "sku" {
+  type        = string
+  description = "The SKU of your server, [find the available SKUs here](https://azure.microsoft.com/en-us/pricing/details/mysql/flexible-server/)"
+  default     = "GP_Standard_D4s_v3"
+}
+
+variable "zone_redundant" {
+  type        = bool
+  description = "Set to `true` if you want zone redundancy"
+}
+
+variable "databases" {
+  type        = list(string)
+  description = "a list of databases to be created on the server"
+}
+
+variable "administrator_login" {
+  type        = string
+  description = "Administrator username for your server"
+  default     = "mysqladmin"
+
+  validation {
+    condition     = length(var.administrator_login) > 1 && length(var.administrator_login) <= 24
+    error_message = "Names can have a max of 24 characters"
+  }
+  validation {
+    condition     = can(regex("[A-Za-z0-9-]+", var.administrator_login))
+    error_message = "Invalid value, valid characters are A-Z, a-z, 0-9 and hyphens"
+  }
 }
