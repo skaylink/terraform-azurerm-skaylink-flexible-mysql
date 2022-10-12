@@ -35,7 +35,6 @@ resource "azurerm_mysql_flexible_server" "mysql" {
   name                   = local.server_name
   resource_group_name    = data.azurerm_resource_group.rg.name
   location               = data.azurerm_resource_group.rg.name
-  version                = var.version
   administrator_login    = "psqladmin"
   administrator_password = random_password.password.result
   zone                   = "1"
