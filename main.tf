@@ -25,7 +25,7 @@ resource "random_password" "password" {
   special = true
 }
 
-resource "azurerm_key_vault_secret" {
+resource "azurerm_key_vault_secret" "password" {
   name         = "${local.server_name}-password"
   value        = random_password.password.result
   key_vault_id = data.azurerm_key_vault.kv.id
