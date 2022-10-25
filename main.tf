@@ -25,10 +25,12 @@ resource "random_password" "password" {
   special = true
 }
 
+#tfsec:ignore:azure-keyvault-ensure-secret-expiry
 resource "azurerm_key_vault_secret" "password" {
   name         = "${local.server_name}-password"
   value        = random_password.password.result
   key_vault_id = data.azurerm_key_vault.kv.id
+  content_type = "password"
 }
 
 resource "azurerm_mysql_flexible_server" "mysql" {
