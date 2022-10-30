@@ -8,6 +8,8 @@ Below is an example of the module in use.
 
 ```terraform
   module "skaylink-flexible-mysql" {
+    source                = "skaylink/skaylink-flexible-mysql/azurerm"
+    version               = "1.0.0"
     resource_group_name   = "my-project-rg"
     usecase               = "my-use-case-that-is-less-than-50-characters"
     location              = "norwayeast"
@@ -32,6 +34,8 @@ This is an example of how this may look:
 
 ```terraform
   module "skaylink-flexible-mysql" {
+    source                              = "skaylink/skaylink-flexible-mysql/azurerm"
+    version                             = "1.0.0"
     resource_group_name                 = "my-project-rg"
     usecase                             = "my-use-case-that-is-less-than-50-characters"
     location                            = "norwayeast"
