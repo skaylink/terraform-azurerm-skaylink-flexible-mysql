@@ -152,3 +152,27 @@ variable "administrator_login" {
     error_message = "Invalid value, valid characters are A-Z, a-z, 0-9 and hyphens"
   }
 }
+
+variable "virtual_network_resource_group_name" {
+  type        = string
+  default     = null
+  description = "The name of the resource group containing the virtual network with your delegated subnet"
+}
+
+variable "virtual_network_name" {
+  type        = string
+  default     = null
+  description = "The name of the VNET where your delegated subnet is located"
+}
+
+variable "delegated_subnet_name" {
+  type        = string
+  default     = null
+  description = "The name of the delegated subnet to assign the service to"
+}
+
+variable "private_dns_zone_name" {
+  type        = string
+  default     = null
+  description = "The name of your new private DNS zone"
+}

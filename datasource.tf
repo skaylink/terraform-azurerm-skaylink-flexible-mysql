@@ -24,3 +24,16 @@ data "azurerm_key_vault" "kv" {
   name                = var.key_vault_name
   resource_group_name = var.mgmt_resource_group
 }
+
+data "azurerm_virtual_network" "vnet" {
+  count               = var.delegated_subnet_name != null ? 1 : 0
+  name                = var.virtual_network_name
+  resource_group_name = var.virtual_network_resource_group_name
+}
+
+data "azurerm_subnet" "subnet" {
+  count                = var.delegated_subnet_name != null ? 1 : 0
+  name                 = var.delegated_subnet_name
+  virtual_network_name = var.virtual_network_name
+  resource_group_name  = var.virtual_network_resource_group_name
+}
