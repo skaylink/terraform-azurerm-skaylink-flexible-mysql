@@ -42,6 +42,8 @@ resource "azurerm_mysql_flexible_server" "mysql" {
   zone                   = "1"
   backup_retention_days  = var.backup_retention_days
   sku_name               = var.sku
+  delegated_subnet_id    = var.delegated_subnet_name == null ? null : data.azurerm_subnet.subnet[0].id
+  private_dns_zone_id    = var.delegated_subnet_name == null ? null : resource.azurerm_private_dns_zone.dns_zone[0].id
 
   storage {
     auto_grow_enabled = true
@@ -61,4 +63,18 @@ resource "azurerm_mysql_flexible_database" "databases" {
   server_name         = azurerm_mysql_flexible_server.mysql.name
   charset             = "utf8"
   collation           = "utf8_unicode_ci"
+}
+
+resource "azurerm_private_dns_zone" "dns_zone" {
+  count               = var.delegated_subnet_name != null ? 1 : 0
+  name                = "${var.private_dns_zone_name}.mysql.database.azure.com"
+  resource_group_name = data.azurerm_resource_group.rg.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "vnet_link" {
+  count                 = var.delegated_subnet_name != null ? 1 : 0
+  name                  = "vnet-link"
+  resource_group_name   = data.azurerm_resource_group.rg.name
+  private_dns_zone_name = azurerm_private_dns_zone.dns_zone[0].name
+  virtual_network_id    = data.azurerm_virtual_network.vnet[0].id
 }
