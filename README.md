@@ -9,7 +9,6 @@ Below is an example of the module in use.
 
 ```terraform
   module "skaylink-flexible-mysql" {
-<<<<<<< Updated upstream
     source                      = "skaylink/skaylink-flexible-mysql/azurerm"
     version                     = "1.0.4"
     resource_group_name         = "my-project-rg"
@@ -18,7 +17,6 @@ Below is an example of the module in use.
     key_vault_name              = "my-kv-name"
     mgmt_resource_group         = "my-kv-resource-group"
     backup_retention_days       = 35
-    engine_version              = "8.0"
     size_gb                     = "20"
     sku                         = "MO_Standard_E2ds_v5"
     zone_redundant              = true
