@@ -104,6 +104,12 @@ variable "backup_retention_days" {
   }
 }
 
+variable "engine_version" {
+  type        = string
+  description = "version of mysql engine, check https://learn.microsoft.com/en-us/rest/api/mysql/flexibleserver/servers/create?tabs=HTTP#serverversion for supported versions"
+  default     = null
+}
+
 variable "iops" {
   type        = string
   description = "IOPS"
