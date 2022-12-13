@@ -78,6 +78,7 @@ resource "azurerm_mysql_flexible_database" "databases" {
   server_name         = azurerm_mysql_flexible_server.mysql.name
   charset             = "utf8"
   collation           = "utf8_unicode_ci"
+  depends_on          = [azurerm_mysql_flexible_server.mysql]
 }
 
 resource "azurerm_private_dns_zone" "dns_zone" {
@@ -101,6 +102,7 @@ resource "azurerm_mysql_flexible_server_firewall_rule" "allow_external_access_my
   server_name         = azurerm_mysql_flexible_server.mysql.name
   start_ip_address    = each.value.start
   end_ip_address      = each.value.end
+  depends_on          = [azurerm_mysql_flexible_server.mysql]
 }
 
 resource "azurerm_mysql_flexible_server_configuration" "mysql_parameters" {
@@ -109,4 +111,5 @@ resource "azurerm_mysql_flexible_server_configuration" "mysql_parameters" {
   resource_group_name = data.azurerm_resource_group.rg.name
   server_name         = azurerm_mysql_flexible_server.mysql.name
   value               = each.value
+  depends_on          = [azurerm_mysql_flexible_server.mysql]
 }
