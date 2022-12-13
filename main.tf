@@ -16,6 +16,20 @@
 
 # For questions and contributions please contact info@iq3cloud.com
 
+terraform {
+  required_version = ">= 1.3"
+  required_providers {
+    random = {
+      version = "> 3.4"
+      source  = "hashicorp/random"
+    }
+    azurerm = {
+      version = "> 3.30"
+      source  = "hashicorp/azurerm"
+    }
+  }
+}
+
 locals {
   server_name = "${var.usecase}-${var.environment}-f-mysql"
 }
@@ -77,4 +91,21 @@ resource "azurerm_private_dns_zone_virtual_network_link" "vnet_link" {
   resource_group_name   = data.azurerm_resource_group.rg.name
   private_dns_zone_name = azurerm_private_dns_zone.dns_zone[0].name
   virtual_network_id    = data.azurerm_virtual_network.vnet[0].id
+}
+
+resource "azurerm_mysql_flexible_server_firewall_rule" "allow_external_access_mysql" {
+  for_each            = var.allow_external_access_mysql != null ? var.allow_external_access_mysql : {}
+  name                = each.key
+  resource_group_name = data.azurerm_resource_group.rg.name
+  server_name         = azurerm_mysql_flexible_server.mysql.name
+  start_ip_address    = each.value.start
+  end_ip_address      = each.value.end
+}
+
+resource "azurerm_mysql_flexible_server_configuration" "mysql_parameters" {
+  for_each            = var.mysql_parameters != null ? var.mysql_parameters : {}
+  name                = each.key
+  resource_group_name = data.azurerm_resource_group.rg.name
+  server_name         = azurerm_mysql_flexible_server.mysql.name
+  value               = each.value
 }

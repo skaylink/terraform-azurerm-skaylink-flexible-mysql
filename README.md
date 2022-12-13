@@ -22,6 +22,16 @@ Below is an example of the module in use.
     zone_redundant        = true
     databases             = ["my-awesome-db-1", "my-awesome-db-2", "my-awesome-db-3"]
     administrator_login   = "iamgroot"
+    allow_external_access_mysql = {
+      "ip_range-name" : {
+        start : "start-IP-range",
+        end : "end-IP-range"
+      }
+    }
+    mysql_parameters = {
+      auto_increment_increment: 2
+      auto_increment_offset : 2
+    }
   }
 ```
 
