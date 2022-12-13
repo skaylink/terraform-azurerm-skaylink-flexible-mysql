@@ -8,27 +8,28 @@ Below is an example of the module in use.
 
 ```terraform
   module "skaylink-flexible-mysql" {
-    source                = "skaylink/skaylink-flexible-mysql/azurerm"
-    version               = "1.0.0"
-    resource_group_name   = "my-project-rg"
-    usecase               = "my-use-case-that-is-less-than-50-characters"
-    location              = "norwayeast"
-    environment           = "dev"
-    key_vault_name        = "my-kv-name"
-    mgmt_resource_group   = "my-kv-resource-group"
-    backup_retention_days = 35
-    size_gb               = "20"
-    sku                   = "MO_Standard_E2ds_v5"
-    zone_redundant        = true
-    databases             = ["my-awesome-db-1", "my-awesome-db-2", "my-awesome-db-3"]
-    administrator_login   = "iamgroot"
+    source                      = "skaylink/skaylink-flexible-mysql/azurerm"
+    version                     = "1.0.4"
+    resource_group_name         = "my-project-rg"
+    usecase                     = "my-use-case-that-is-less-than-50-characters"
+    location                    = "norwayeast"
+    environment                 = "dev"
+    key_vault_name              = "my-kv-name"
+    mgmt_resource_group         = "my-kv-resource-group"
+    backup_retention_days       = 35
+    engine_version              = "8.0"
+    size_gb                     = "20"
+    sku                         = "MO_Standard_E2ds_v5"
+    zone_redundant              = true
+    databases                   = ["my-awesome-db-1", "my-awesome-db-2", "my-awesome-db-3"]
+    administrator_login         = "iamgroot"
     allow_external_access_mysql = {
       "ip_range-name" : {
         start : "start-IP-range",
         end : "end-IP-range"
       }
     }
-    mysql_parameters = {
+    mysql_parameters            = {
       auto_increment_increment: 2
       auto_increment_offset : 2
     }
@@ -45,7 +46,7 @@ This is an example of how this may look:
 ```terraform
   module "skaylink-flexible-mysql" {
     source                              = "skaylink/skaylink-flexible-mysql/azurerm"
-    version                             = "1.0.0"
+    version                             = "1.0.4"
     resource_group_name                 = "my-project-rg"
     usecase                             = "my-use-case-that-is-less-than-50-characters"
     location                            = "norwayeast"

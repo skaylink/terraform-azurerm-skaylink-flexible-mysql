@@ -55,6 +55,7 @@ resource "azurerm_mysql_flexible_server" "mysql" {
   administrator_password = random_password.password.result
   zone                   = "1"
   backup_retention_days  = var.backup_retention_days
+  version                = var.engine_version == null ? null : var.engine_version
   sku_name               = var.sku
   delegated_subnet_id    = var.delegated_subnet_name == null ? null : data.azurerm_subnet.subnet[0].id
   private_dns_zone_id    = var.delegated_subnet_name == null ? null : resource.azurerm_private_dns_zone.dns_zone[0].id
