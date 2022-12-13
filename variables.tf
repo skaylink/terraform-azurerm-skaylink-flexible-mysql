@@ -46,12 +46,6 @@ variable "usecase" {
   }
 }
 
-variable "location" {
-  type        = string
-  description = "The location of the resources, defaults to west Europe"
-  default     = "westeurope"
-}
-
 variable "environment" {
   type        = string
   description = "The environment we will deploy resources in, for example: dev, test, qa, prd"
@@ -175,4 +169,21 @@ variable "private_dns_zone_name" {
   type        = string
   default     = null
   description = "The name of your new private DNS zone"
+}
+
+variable "allow_external_access_mysql" {
+  type = map(
+    object({
+      start = string,
+      end   = string
+    })
+  )
+  default     = null
+  description = "map of dicts with ip addresses to allow in database firewall config"
+}
+
+variable "mysql_parameters" {
+  type        = map(string)
+  default     = null
+  description = "map of mysql parameters to be configured on Azure database"
 }
