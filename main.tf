@@ -66,8 +66,11 @@ resource "azurerm_mysql_flexible_server" "mysql" {
     size_gb           = var.size_gb
   }
 
-  high_availability {
-    mode = var.zone_redundant == true ? "ZoneRedundant" : "SameZone"
+  dynamic "high_availability" {
+    for_each = var.high_availability == true ? [true] : []
+    content {
+      mode = var.zone_redundant == true ? "ZoneRedundant" : "SameZone"
+    }
   }
 }
 

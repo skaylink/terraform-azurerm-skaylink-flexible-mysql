@@ -10,7 +10,7 @@ Below is an example of the module in use.
 ```terraform
   module "skaylink-flexible-mysql" {
     source                      = "skaylink/skaylink-flexible-mysql/azurerm"
-    version                     = "1.0.4"
+    version                     = "1.0.6"
     resource_group_name         = "my-project-rg"
     usecase                     = "my-use-case-that-is-less-than-50-characters"
     environment                 = "dev"
@@ -48,7 +48,7 @@ This is an example of how this may look:
 ```terraform
   module "skaylink-flexible-mysql" {
     source                              = "skaylink/skaylink-flexible-mysql/azurerm"
-    version                             = "1.0.4"
+    version                             = "1.0.6"
     resource_group_name                 = "my-project-rg"
     usecase                             = "my-use-case-that-is-less-than-50-characters"
     environment                         = "dev"
@@ -67,7 +67,7 @@ This is an example of how this may look:
   }
 ```
 
-### Database with non-default version
+### Database with non-default version and HA disabled
 
 Below is an example of the module in use with MySQL engine version 8.0.21.
 For supported versions check [API documentation](https://learn.microsoft.com/en-us/rest/api/mysql/flexibleserver/servers/create?tabs=HTTP#serverversion).
@@ -79,7 +79,7 @@ database is created.
 ```terraform
   module "skaylink-flexible-mysql" {
     source                      = "skaylink/skaylink-flexible-mysql/azurerm"
-    version                     = "1.0.4"
+    version                     = "1.0.6"
     resource_group_name         = "my-project-rg"
     usecase                     = "my-use-case-that-is-less-than-50-characters"
     environment                 = "dev"
@@ -89,7 +89,8 @@ database is created.
     engine_version              = "8.0.21"
     size_gb                     = "20"
     sku                         = "MO_Standard_E2ds_v5"
-    zone_redundant              = true
+    high_availability           = false
+    zone_redundant              = false
     databases                   = ["my-awesome-db-1", "my-awesome-db-2", "my-awesome-db-3"]
     administrator_login         = "iamgroot"
     allow_external_access_mysql = {
