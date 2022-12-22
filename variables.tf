@@ -128,6 +128,12 @@ variable "sku" {
   default     = "GP_Standard_D4s_v3"
 }
 
+variable "high_availability" {
+  type        = bool
+  description = "Set to `false` if you to disable high availability"
+  default     = true
+}
+
 variable "zone_redundant" {
   type        = bool
   description = "Set to `true` if you want zone redundancy"
