@@ -81,6 +81,9 @@ resource "azurerm_mysql_configuration" "time_zone" {
   resource_group_name = data.azurerm_resource_group.rg.name
   server_name         = azurerm_mysql_flexible_server.mysql.name
   value               = "+00:00"
+  depends_on = [
+    azurerm_mysql_flexible_server.mysql
+  ]
 }
 
 # based on https://errorsfixing.com/terraform-azure-mysql-gtid_mode-on-error/
