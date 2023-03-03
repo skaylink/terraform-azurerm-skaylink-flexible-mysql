@@ -130,8 +130,14 @@ variable "sku" {
 
 variable "high_availability" {
   type        = bool
-  description = "Set to `false` if you to disable high availability"
+  description = "Set to `false` if you want to disable high availability"
   default     = true
+}
+
+variable "gtid_enabled" {
+  type        = bool
+  description = "Set to `true` if you want to enable GTID"
+  default     = false
 }
 
 variable "zone_redundant" {

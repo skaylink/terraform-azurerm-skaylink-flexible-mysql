@@ -74,6 +74,63 @@ resource "azurerm_mysql_flexible_server" "mysql" {
   }
 }
 
+# based on https://errorsfixing.com/terraform-azure-mysql-gtid_mode-on-error/
+resource "azurerm_mysql_configuration" "time_zone" {
+  for_each            = var.gtid_enabled == true ? [true] : []
+  name                = "time_zone"
+  resource_group_name = data.azurerm_resource_group.rg.name
+  server_name         = azurerm_mysql_flexible_server.mysql.name
+  value               = "+00:00"
+}
+
+# based on https://errorsfixing.com/terraform-azure-mysql-gtid_mode-on-error/
+resource "azurerm_mysql_configuration" "enforce_gtid_consistency" {
+  for_each            = var.gtid_enabled == true ? [true] : []
+  name                = "enforce_gtid_consistency"
+  resource_group_name = data.azurerm_resource_group.rg.name
+  server_name         = azurerm_mysql_flexible_server.mysql.name
+  value               = "ON"
+  depends_on = [
+    azurerm_mysql_configuration.time_zone
+  ]
+}
+
+# based on https://errorsfixing.com/terraform-azure-mysql-gtid_mode-on-error/
+resource "azurerm_mysql_configuration" "gtid_mode_OFF_permissive" {
+  for_each            = var.gtid_enabled == true ? [true] : []
+  name                = "gtid_mode"
+  resource_group_name = data.azurerm_resource_group.rg.name
+  server_name         = azurerm_mysql_flexible_server.mysql.name
+  value               = "OFF_PERMISSIVE"
+  depends_on = [
+    azurerm_mysql_configuration.enforce_gtid_consistency,
+  ]
+}
+
+# based on https://errorsfixing.com/terraform-azure-mysql-gtid_mode-on-error/
+resource "azurerm_mysql_configuration" "gtid_mode_ON_Permissive" {
+  for_each            = var.gtid_enabled == true ? [true] : []
+  name                = "gtid_mode"
+  resource_group_name = data.azurerm_resource_group.rg.name
+  server_name         = azurerm_mysql_flexible_server.mysql.name
+  value               = "ON_PERMISSIVE"
+  depends_on = [
+    azurerm_mysql_configuration.gtid_mode_OFF_permissive
+  ]
+}
+
+# based on https://errorsfixing.com/terraform-azure-mysql-gtid_mode-on-error/
+resource "azurerm_mysql_configuration" "gtid_mode_ON" {
+  for_each            = var.gtid_enabled == true ? [true] : []
+  name                = "gtid_mode"
+  resource_group_name = data.azurerm_resource_group.rg.name
+  server_name         = azurerm_mysql_flexible_server.mysql.name
+  value               = "ON"
+  depends_on = [
+    azurerm_mysql_configuration.gtid_mode_ON_Permissive
+  ]
+}
+
 resource "azurerm_mysql_flexible_database" "databases" {
   for_each            = toset(var.databases)
   name                = each.value
